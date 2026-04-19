@@ -1,0 +1,133 @@
+application {
+  config {
+    baseName assistaCrise,
+    packageName com.assista.crise,
+    applicationType monolith,
+    authenticationType jwt,
+    databaseType sql,
+    prodDatabaseType postgresql,
+    buildTool maven,
+    clientFramework react,
+    testFrameworks [cypress]
+  }
+}
+
+enum UserRole {
+    SINISTRE,
+    CITOYEN,
+    AUTORITE,
+    ADMIN
+}
+
+enum RequestStatus {
+    OUVERTE,
+    EN_COURS_DE_RESOLUTION,
+    RESOLUE,
+    FERMEE
+}
+
+enum CrisisStatus {
+    ACTIVE,
+    FERMEE
+}
+
+entity User {
+    nom String required maxlength(100)
+    prenom String required maxlength(100)
+    email String required pattern(/^[^@\s]+@[^@\s]+\.[^@\s]+$/) maxlength(255)
+    motDePasse String required minlength(8) maxlength(100)
+    telephone String pattern(/^[0-9+\-\s]{10,20}$/) maxlength(20)
+    role UserRole required
+    dateInscription Instant required
+    banni Boolean required
+}
+
+entity Crisis {
+    titre String required maxlength(200)
+    description TextBlob required
+    typeCrise String required maxlength(100)
+    localisation String required maxlength(255)
+    dateDebut Instant required
+    dateFin Instant
+    status CrisisStatus required
+}
+
+entity Request {
+    titre String required maxlength(200)
+    description TextBlob required
+    localisation String required maxlength(255)
+    dateCreation Instant required
+    dateFermeture Instant
+    status RequestStatus required
+    archivee Boolean required
+}
+
+entity Offer {
+    titre String required maxlength(200)
+    description TextBlob required
+    localisation String required maxlength(255)
+    dateCreation Instant required
+    archivee Boolean required
+}
+
+entity Chat {
+    dateCreation Instant required
+}
+
+entity Message {
+    contenu TextBlob required
+    dateEnvoi Instant required
+    lu Boolean required
+}
+
+entity Authority {
+    organisation String required maxlength(200)
+    fonction String required maxlength(100)
+}
+
+entity Admin {
+    niveauDroit String required maxlength(50)
+}
+
+relationship OneToMany {
+    User{request} to Request{user},
+    User{offer} to Offer{user},
+    User{message} to Message{user}
+}
+
+relationship OneToMany {
+    Crisis{request} to Request{crisis},
+    Crisis{offer} to Offer{crisis}
+}
+
+relationship ManyToOne {
+    Crisis{authority} to Authority{user}
+}
+
+relationship OneToOne {
+    Request{chat} to Chat,
+    Offer{chat} to Chat
+}
+
+relationship OneToMany {
+    Chat{message} to Message{chat}
+}
+
+relationship ManyToMany {
+    Request{offer} to Offer{request}
+}
+
+relationship ManyToOne {
+    User{admin} to Admin{user}
+}
+
+relationship OneToOne {
+    Authority{user} to User,
+    Admin{user} to User
+}
+
+paginate User, Request, Offer, Crisis, Message with infinite-scroll
+paginate Chat, Authority, Admin with pagination
+
+dto all with mapstruct
+service all with serviceImpl

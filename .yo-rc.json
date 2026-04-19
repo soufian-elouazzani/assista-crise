@@ -1,0 +1,18 @@
+{
+  "generator-jhipster": {
+    "applicationType": "monolith",
+    "authenticationType": "jwt",
+    "baseName": "assistaCrise",
+    "buildTool": "maven",
+    "clientFramework": "react",
+    "databaseType": "sql",
+    "entities": [],
+    "jhipsterVersion": "8.11.0",
+    "jwtSecretKey": "YTI0MjFiMDBkM2NjNWJlNDkzODEwOTg1NjVhODQ3OWQyOTViNTA5OGM1ODY5OWYwMjNhYmUyNWVmOGE1YmIxZTJhMzViNjhmYzgyZTNkYmM1ZDU0MzNlZmRlM2M0YWIwZDg1ODQ0YWNhYmMwNmI0N2RiNWI4ZWEyNWI4OTYxNTA=",
+    "languages": ["en"],
+    "nativeLanguage": "en",
+    "packageName": "com.assista.crise",
+    "prodDatabaseType": "postgresql",
+    "testFrameworks": ["cypress"]
+  }
+}
